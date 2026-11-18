@@ -13,8 +13,18 @@
   .lead { color:var(--muted); margin:0 0 28px; max-width:62ch; }
   .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
   .card { background:var(--card); border:2px solid var(--ink); border-radius:18px; overflow:hidden; display:flex; flex-direction:column; }
-  .frame { aspect-ratio:9/14; background:#150c3a; border-bottom:2px solid var(--ink); }
-  .frame iframe { width:100%; height:100%; border:0; display:block; }
+  .frame { position:relative; aspect-ratio:9/14; border-bottom:2px solid var(--ink); }
+  .frame iframe { position:absolute; inset:0; width:100%; height:100%; border:0; display:block; }
+  /* the game only loads, and only captures touches, after the poster is tapped: the page stays scrollable */
+  .poster { position:absolute; inset:0; width:100%; border:0; padding:0; cursor:pointer; color:#fff; font:inherit; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; }
+  .poster[hidden] { display:none; }
+  .poster b { font-size:26px; letter-spacing:.5px; text-shadow:0 2px 0 rgba(0,0,0,.35); }
+  .poster .play { width:84px; height:84px; border-radius:50%; background:var(--green); border:4px solid #fff; display:grid; place-items:center; box-shadow:0 6px 0 rgba(0,0,0,.25); transition:transform .15s; }
+  .poster:hover .play, .poster:focus-visible .play { transform:scale(1.08); }
+  .poster .play::after { content:""; margin-left:7px; border-left:26px solid #fff; border-top:16px solid transparent; border-bottom:16px solid transparent; }
+  .poster span { font-size:14px; opacity:.9; }
+  .p-hex { background:linear-gradient(#33217f,#8047b3); } .p-frog { background:linear-gradient(#a9dcf2,#8ecf7a); } .p-jelly { background:linear-gradient(#3a1f8f,#150c3a); }
+  .stop { position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; border-radius:999px; border:2px solid #fff; background:rgba(20,12,50,.8); color:#fff; font:700 13px/1 inherit; cursor:pointer; }
   .body { padding:16px 18px 18px; }
   h2 { margin:0 0 2px; font-size:22px; }
   .tag { color:var(--muted); font-size:14px; margin:0 0 10px; }
@@ -29,11 +39,13 @@
 <body>
 <main>
   <h1>Playable ad demos</h1>
-  <p class="lead">Three playable ads, each a single HTML file under 40 KB. No engine, no libraries, no image or audio assets: all art is drawn in code and all sound is synthesized at runtime. All three play right here.</p>
+  <p class="lead">Three playable ads, each a single HTML file under 40 KB. No engine, no libraries, no image or audio assets: all art is drawn in code and all sound is synthesized at runtime. Tap a card to play it here, or open it full screen.</p>
 
   <div class="grid">
     <section class="card">
-      <div class="frame"><iframe src="hex-bloom/index.html" title="Hex Bloom 3D playable ad" loading="lazy"></iframe></div>
+      <div class="frame" data-src="hex-bloom/index.html" data-title="Hex Bloom 3D playable ad">
+        <button class="poster p-hex" type="button"><b>Hex Bloom 3D</b><i class="play"></i><span>Tap to play</span></button>
+      </div>
       <div class="body">
         <h2>Hex Bloom 3D</h2>
         <p class="tag">3D hex-stack puzzle · 39 KB</p>
@@ -43,15 +55,17 @@
           <li>Chain-reaction merges with flip animations</li>
         </ul>
         <div class="links">
-          <a class="btn primary" href="hex-bloom/index.html">Play full screen</a>
-          <a class="btn" href="hex-bloom/index.html?v=b">Variant B</a>
-          <a class="btn" href="hex-bloom/index.html?debug=1">Debug view</a>
+          <a class="btn primary" href="hex-bloom/index.html?back=1">Play full screen</a>
+          <a class="btn" href="hex-bloom/index.html?v=b&back=1">Variant B</a>
+          <a class="btn" href="hex-bloom/index.html?debug=1&back=1">Debug view</a>
         </div>
       </div>
     </section>
 
     <section class="card">
-      <div class="frame"><iframe src="froggo-hunt/index.html" title="Froggo Hunt playable ad" loading="lazy"></iframe></div>
+      <div class="frame" data-src="froggo-hunt/index.html" data-title="Froggo Hunt playable ad">
+        <button class="poster p-frog" type="button"><b>Froggo Hunt</b><i class="play"></i><span>Tap to play</span></button>
+      </div>
       <div class="body">
         <h2>Froggo Hunt</h2>
         <p class="tag">Hidden object · 38 KB</p>
@@ -61,15 +75,17 @@
           <li>Hints that adapt to how the player is doing</li>
         </ul>
         <div class="links">
-          <a class="btn primary" href="froggo-hunt/index.html">Play full screen</a>
-          <a class="btn" href="froggo-hunt/index.html?v=b">Variant B</a>
-          <a class="btn" href="froggo-hunt/index.html?debug=1">Debug view</a>
+          <a class="btn primary" href="froggo-hunt/index.html?back=1">Play full screen</a>
+          <a class="btn" href="froggo-hunt/index.html?v=b&back=1">Variant B</a>
+          <a class="btn" href="froggo-hunt/index.html?debug=1&back=1">Debug view</a>
         </div>
       </div>
     </section>
 
     <section class="card">
-      <div class="frame"><iframe src="jelly-tubes/index.html" title="Jelly Tubes playable ad" loading="lazy"></iframe></div>
+      <div class="frame" data-src="jelly-tubes/index.html" data-title="Jelly Tubes playable ad">
+        <button class="poster p-jelly" type="button"><b>Jelly Tubes</b><i class="play"></i><span>Tap to play</span></button>
+      </div>
       <div class="body">
         <h2>Jelly Tubes</h2>
         <p class="tag">Color sort puzzle · 31 KB</p>
@@ -79,9 +95,9 @@
           <li>Squash, bounce and eye-tracking characters</li>
         </ul>
         <div class="links">
-          <a class="btn primary" href="jelly-tubes/index.html">Play full screen</a>
-          <a class="btn" href="jelly-tubes/index.html?v=b">Variant B</a>
-          <a class="btn" href="jelly-tubes/index.html?debug=1">Debug view</a>
+          <a class="btn primary" href="jelly-tubes/index.html?back=1">Play full screen</a>
+          <a class="btn" href="jelly-tubes/index.html?v=b&back=1">Variant B</a>
+          <a class="btn" href="jelly-tubes/index.html?debug=1&back=1">Debug view</a>
         </div>
       </div>
     </section>
@@ -92,5 +108,16 @@
     Source and notes: <a href="https://github.com/Kunalbehbud/playable-ads">github.com/Kunalbehbud/playable-ads</a> · Built by Kunal Behbudzade.
   </footer>
 </main>
+<script>
+document.querySelectorAll('.frame').forEach(function (frame) {
+  var poster = frame.querySelector('.poster');
+  poster.addEventListener('click', function () {
+    var game = document.createElement('iframe'); game.src = frame.dataset.src; game.title = frame.dataset.title;
+    var stop = document.createElement('button'); stop.className = 'stop'; stop.type = 'button'; stop.textContent = '✕ Close';
+    stop.addEventListener('click', function () { game.remove(); stop.remove(); poster.hidden = false; });
+    poster.hidden = true; frame.appendChild(game); frame.appendChild(stop);
+  });
+});
+</script>
 </body>
 </html>
