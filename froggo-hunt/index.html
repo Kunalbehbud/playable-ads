@@ -478,7 +478,7 @@ function update(dt) {
     p.vy += p.g * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.vr * dt; p.vx *= .985;
   }
   if (state === 'play') {
-    if (interacted || time - playT > 6) timeLeft -= dt;                          // timer waits for the player
+    if (interacted) timeLeft -= dt;                          // timer waits for the player
     if (timeLeft <= 10 && Math.ceil(timeLeft) < lastTick) { lastTick = Math.ceil(timeLeft); sfx.tick(); }
     if (timeLeft <= 0) { timeLeft = 0; return endCard(false); }
     if (hint) { hint.t += dt; if (hint.t > 5) { hint = null; lastInput = time; } }
