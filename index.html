@@ -134,6 +134,17 @@
 <script>
 // Each card shows the real game running as a preview. A transparent cover sits on top so the page still scrolls;
 // tapping it restarts the game from the beginning and hands it the touches.
+// One AudioContext, started by the tap on a cover, is handed to the game inside (same origin).
+var shared = null;
+function startAudio() {
+  try {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!shared && Ctx) shared = new Ctx();
+    if (shared && shared.state !== 'running') shared.resume();
+    var b = shared.createBufferSource(); b.buffer = shared.createBuffer(1, 1, 22050); b.connect(shared.destination); b.start(0);
+  } catch (_) {}
+  window.__sharedAudio = shared;
+}
 document.querySelectorAll('.frame').forEach(function (frame) {
   var poster = frame.querySelector('.poster');
   var game = document.createElement('iframe');
@@ -142,8 +153,8 @@ document.querySelectorAll('.frame').forEach(function (frame) {
   var stop = document.createElement('button'); stop.className = 'stop'; stop.type = 'button'; stop.textContent = '\u2715 Close'; stop.hidden = true;
   frame.appendChild(stop);
   function restart() { game.src = frame.dataset.src; }
-  poster.addEventListener('click', function () { poster.hidden = true; stop.hidden = false; game.tabIndex = 0; restart(); });
-  stop.addEventListener('click', function () { poster.hidden = false; stop.hidden = true; game.tabIndex = -1; restart(); });
+  poster.addEventListener('click', function () { startAudio(); game.dataset.live = '1'; poster.hidden = true; stop.hidden = false; game.tabIndex = 0; restart(); });
+  stop.addEventListener('click', function () { game.dataset.live = ''; poster.hidden = false; stop.hidden = true; game.tabIndex = -1; restart(); });
 });
 </script>
 </body>

@@ -136,10 +136,13 @@ function stepTweens(dt) {
 
 // ───────────────────────── audio (synthesized) ─────────────────────────
 var AC = null, master = null;
+// When the demo page embeds the game, the tap on its cover already started an AudioContext there. Reuse it:
+// the game then has sound from the first frame, even where a drag alone would never unlock audio.
+function hostAudio() { try { var f = window.frameElement; return f && f.dataset.live === '1' && parent.__sharedAudio || null; } catch (_) { return null; } }
 function audioInit() {
   if (AC) { if (AC.state === 'suspended' && !paused) AC.resume(); return; }
   try {
-    AC = new (window.AudioContext || window.webkitAudioContext)();
+    AC = hostAudio() || new (window.AudioContext || window.webkitAudioContext)();
     master = AC.createGain(); master.gain.value = .5; master.connect(AC.destination);
   } catch (_) { AC = null; }
 }
@@ -558,10 +561,14 @@ sndEl.addEventListener('click', function () {
   if (!muted) tone(660, .12, 'sine', .2, 990);
   track('sound', { muted: muted });
 });
+var quiet = 0;
 setInterval(function () {
-  audible = !!AC && AC.state === 'running' && !muted;
-  sndEl.textContent = muted ? '\uD83D\uDD07' : audible || !interacted ? '\uD83D\uDD0A' : '\uD83D\uDD07 Tap for sound';
+  var running = !!AC && AC.state === 'running';
+  audible = running && !muted;
+  quiet = interacted && !running ? quiet + 250 : 0;                        // only ask for a tap if audio really failed to start
+  sndEl.textContent = muted ? '\uD83D\uDD07' : quiet >= 1500 ? '\uD83D\uDD07 Tap for sound' : '\uD83D\uDD0A';
 }, 250);
+if (hostAudio()) audioInit();
 window.__playable = { audio: function () { return AC ? AC.state : "none"; }, events: EVENTS, tapWorld: tapWorld, hint: function () { showHint(false); }, cam: cam,
   info: function () { return { state: state, found: found, timeLeft: Math.round(timeLeft), frogs: frogs.map(function (f) { return { type: f.type, x: f.x, y: f.y, found: f.found }; }) }; } };
 Net.ready(function () {

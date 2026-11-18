@@ -118,10 +118,13 @@ function stepTweens(dt) {
 
 // ───────────────────────── audio (synthesized) ─────────────────────────
 var AC = null, master = null, noiseBuf = null;
+// When the demo page embeds the game, the tap on its cover already started an AudioContext there. Reuse it:
+// the game then has sound from the first frame, even where a drag alone would never unlock audio.
+function hostAudio() { try { var f = window.frameElement; return f && f.dataset.live === '1' && parent.__sharedAudio || null; } catch (_) { return null; } }
 function audioInit() {
   if (AC) { if (AC.state === 'suspended' && !paused) AC.resume(); return; }
   try {
-    AC = new (window.AudioContext || window.webkitAudioContext)(); master = AC.createGain(); master.gain.value = .5; master.connect(AC.destination);
+    AC = hostAudio() || new (window.AudioContext || window.webkitAudioContext)(); master = AC.createGain(); master.gain.value = .5; master.connect(AC.destination);
     noiseBuf = AC.createBuffer(1, AC.sampleRate * .5, AC.sampleRate); var d = noiseBuf.getChannelData(0); for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   } catch (_) { AC = null; }
 }
@@ -437,7 +440,14 @@ var sndEl = document.getElementById('snd'), muted = false, audible = false;
 function unlockAudio() { audioInit(); if (AC && AC.state !== 'running' && !paused) { try { AC.resume(); } catch (_) {} } }
 ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'mousedown', 'click', 'keydown'].forEach(function (ev) { window.addEventListener(ev, unlockAudio, true); });
 sndEl.addEventListener('click', function () { if (audible || muted) muted = !muted; if (master) master.gain.value = muted ? 0 : .5; if (!muted) tone(660, .12, 'sine', .2, 990); track('sound', { muted: muted }); });
-setInterval(function () { audible = !!AC && AC.state === 'running' && !muted; sndEl.textContent = muted ? '🔇' : audible || !interacted ? '🔊' : '🔇 Tap for sound'; }, 250);
+var quiet = 0;
+setInterval(function () {
+  var running = !!AC && AC.state === 'running';
+  audible = running && !muted;
+  quiet = interacted && !running ? quiet + 250 : 0;                        // only ask for a tap if audio really failed to start
+  sndEl.textContent = muted ? '\uD83D\uDD07' : quiet >= 1500 ? '\uD83D\uDD07 Tap for sound' : '\uD83D\uDD0A';
+}, 250);
+if (hostAudio()) audioInit();
 
 window.__playable = { audio: function () { return AC ? AC.state : 'none'; }, events: EVENTS, step: function (n) { for (var i = 0; i < n; i++) update(1 / 30); render(); },
   scrub: function (x, y) { if (state !== 'play') return false; if (!interacted) { interacted = true; playT = time; } scrub(x, y, 200); return true; },

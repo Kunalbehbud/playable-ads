@@ -114,9 +114,12 @@ function stepTweens(dt) {
 
 // ───────────────────────── audio (synthesized) ─────────────────────────
 var AC = null, master = null;
+// When the demo page embeds the game, the tap on its cover already started an AudioContext there. Reuse it:
+// the game then has sound from the first frame, even where a drag alone would never unlock audio.
+function hostAudio() { try { var f = window.frameElement; return f && f.dataset.live === '1' && parent.__sharedAudio || null; } catch (_) { return null; } }
 function audioInit() {
   if (AC) { if (AC.state === 'suspended' && !paused) AC.resume(); return; }
-  try { AC = new (window.AudioContext || window.webkitAudioContext)(); master = AC.createGain(); master.gain.value = .5; master.connect(AC.destination); } catch (_) { AC = null; }
+  try { AC = hostAudio() || new (window.AudioContext || window.webkitAudioContext)(); master = AC.createGain(); master.gain.value = .5; master.connect(AC.destination); } catch (_) { AC = null; }
 }
 function tone(f, d, type, vol, slide, delay) {
   if (!AC) return;
@@ -569,10 +572,14 @@ sndEl.addEventListener('click', function () {
   if (!muted) tone(660, .12, 'sine', .2, 990);
   track('sound', { muted: muted });
 });
+var quiet = 0;
 setInterval(function () {
-  audible = !!AC && AC.state === 'running' && !muted;
-  sndEl.textContent = muted ? '\uD83D\uDD07' : audible || !interacted ? '\uD83D\uDD0A' : '\uD83D\uDD07 Tap for sound';
+  var running = !!AC && AC.state === 'running';
+  audible = running && !muted;
+  quiet = interacted && !running ? quiet + 250 : 0;                        // only ask for a tap if audio really failed to start
+  sndEl.textContent = muted ? '\uD83D\uDD07' : quiet >= 1500 ? '\uD83D\uDD07 Tap for sound' : '\uD83D\uDD0A';
 }, 250);
+if (hostAudio()) audioInit();
 window.__playable = { audio: function () { return AC ? AC.state : "none"; }, events: EVENTS, best: function () { var b = bestMove(); return b ? { slot: b.slot.i, cell: b.cell.i } : null; },
   place: function (si, ci) { if (state === 'play' && slots[si].tiles.length && !cells[ci].tiles.length) { place(slots[si], cells[ci]); return true; } return false; },
   info: function () { return { state: state, score: score, moves: moves, slots: slots.map(function (s) { return s.tiles.map(function (t) { return t.c; }).join(''); }), cells: cells.map(function (c) { return c.tiles.map(function (t) { return t.c; }).join(''); }) }; } };
