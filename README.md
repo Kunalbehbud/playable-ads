@@ -1,6 +1,6 @@
 # Playable ad demos
 
-Three playable ads, each a single HTML file under 40 KB with no engine, no libraries and no image or audio assets. All graphics are drawn in code and all sound is synthesized with WebAudio at runtime.
+Four playable ads, each a single HTML file under 40 KB with no engine, no libraries and no image or audio assets. All graphics are drawn in code and all sound is synthesized with WebAudio at runtime.
 
 Play them: https://kunalbehbud.github.io/playable-ads/
 
@@ -9,6 +9,7 @@ Play them: https://kunalbehbud.github.io/playable-ads/
 | **Hex Bloom 3D** | 3D hex-stack puzzle (WebGL) | `hex-bloom/index.html` |
 | **Froggo Hunt** | Hidden object | `froggo-hunt/index.html` |
 | **Jelly Tubes** | Color sort puzzle | `jelly-tubes/index.html` |
+| **Muddy Pup** | Interrupted-play hook (scrub to clean) | `muddy-pup/index.html` |
 
 ## Hex Bloom 3D
 
@@ -39,6 +40,17 @@ Sort the jellies so every tube holds one colour.
 - **Flow:** guided tutorial level → real level → end card with CTA.
 - **Tutorial hand driven by a solver:** a BFS solver computes the next best move from the current board, so the hint is correct even after the player goes off-script.
 - **Game feel:** squash and stretch, bounce landings, eye tracking and blinking, rising-pitch combo sounds.
+
+## Muddy Pup
+
+Scrub a muddy puppy clean with a soapy sponge. The soap runs out just before the job is done.
+
+- **Interrupted play as the hook:** this is the "let me finish!" pattern common in playable ads. The ad ends on an unfinished task, the leftover mud is circled, and the CTA offers the only way to finish.
+- **Cut-off point is a variant parameter:** variant A stops at 92% clean, variant B at 78%. Both report `cutoff` and `cta` events, so the stopping point can be A/B tested against click-through instead of guessed.
+- **Soap gauge tied to progress:** the gauge drains with cleaning progress, so it always empties at the cut-off no matter how the player scrubs, and a low-soap warning builds tension first.
+- **Scrub to reveal:** the mud is an offscreen layer erased with a soft brush. Progress comes from a coarse grid over the puppy's silhouette, so it is exact without reading pixels every frame.
+- **Character that reacts:** the puppy's mood, tail wag, flies and stink lines follow progress, and it pleads when it is left dirty.
+- **Sound:** the scrub is filtered noise synthesized at runtime, pitched by sponge speed.
 
 ## Shared
 
