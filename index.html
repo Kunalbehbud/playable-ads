@@ -112,7 +112,7 @@
 document.querySelectorAll('.frame').forEach(function (frame) {
   var poster = frame.querySelector('.poster');
   poster.addEventListener('click', function () {
-    var game = document.createElement('iframe'); game.src = frame.dataset.src; game.title = frame.dataset.title;
+    var game = document.createElement('iframe'); game.allow = 'autoplay'; game.src = frame.dataset.src; game.title = frame.dataset.title;
     var stop = document.createElement('button'); stop.className = 'stop'; stop.type = 'button'; stop.textContent = '✕ Close';
     stop.addEventListener('click', function () { game.remove(); stop.remove(); poster.hidden = false; });
     poster.hidden = true; frame.appendChild(game); frame.appendChild(stop);

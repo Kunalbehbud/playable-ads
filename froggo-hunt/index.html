@@ -11,11 +11,13 @@ html,body{margin:0;height:100%;overflow:hidden;background:#fbf1dc;touch-action:n
 canvas{display:block;width:100%;height:100%}
 #dbg{position:fixed;left:6px;bottom:6px;margin:0;padding:6px 8px;font:10px/1.35 monospace;color:#9f9;background:rgba(0,0,0,.65);border-radius:6px;pointer-events:none;display:none;white-space:pre}
 #back{position:fixed;top:10px;right:10px;z-index:4;display:none;padding:8px 14px;border-radius:999px;border:2px solid #fff;background:rgba(20,12,50,.82);color:#fff;font:700 14px/1 system-ui,sans-serif;text-decoration:none}
+#snd{position:fixed;top:10px;left:10px;z-index:4;padding:7px 12px;border-radius:999px;border:2px solid #fff;background:rgba(20,12,50,.82);color:#fff;font:700 13px/1.2 system-ui,sans-serif;cursor:pointer}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
 <pre id="dbg"></pre>
+<button id="snd" type="button" aria-label="Sound">🔊</button>
 <a id="back" href="../">&lsaquo; All demos</a>
 <script>
 /* Froggo Hunt — hidden-object playable ad demo.
@@ -544,7 +546,23 @@ function frame(now) {
 // ───────────────────────── boot ─────────────────────────
 if (DEBUG) dbgEl.style.display = 'block';
 if (Q.get('back') === '1') document.getElementById('back').style.display = 'block';   // demo-site navigation, never shown in an ad build
-window.__playable = { events: EVENTS, tapWorld: tapWorld, hint: function () { showHint(false); }, cam: cam,
+// ───────────────────────── sound unlock + mute ─────────────────────────
+// Browsers only start audio from a tap. A drag does not count on phones, so every input event tries to unlock,
+// and the sound button gives a guaranteed tap (it doubles as a mute toggle).
+var sndEl = document.getElementById('snd'), muted = false, audible = false;
+function unlockAudio() { audioInit(); if (AC && AC.state !== 'running' && !paused) { try { AC.resume(); } catch (_) {} } }
+['pointerdown', 'pointerup', 'touchstart', 'touchend', 'mousedown', 'click', 'keydown'].forEach(function (ev) { window.addEventListener(ev, unlockAudio, true); });
+sndEl.addEventListener('click', function () {
+  if (audible || muted) muted = !muted;
+  if (master) master.gain.value = muted ? 0 : .5;
+  if (!muted) tone(660, .12, 'sine', .2, 990);
+  track('sound', { muted: muted });
+});
+setInterval(function () {
+  audible = !!AC && AC.state === 'running' && !muted;
+  sndEl.textContent = muted ? '\uD83D\uDD07' : audible || !interacted ? '\uD83D\uDD0A' : '\uD83D\uDD07 Tap for sound';
+}, 250);
+window.__playable = { audio: function () { return AC ? AC.state : "none"; }, events: EVENTS, tapWorld: tapWorld, hint: function () { showHint(false); }, cam: cam,
   info: function () { return { state: state, found: found, timeLeft: Math.round(timeLeft), frogs: frogs.map(function (f) { return { type: f.type, x: f.x, y: f.y, found: f.found }; }) }; } };
 Net.ready(function () {
   track('ready');
