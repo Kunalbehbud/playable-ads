@@ -6,10 +6,10 @@ Play them: https://kunalbehbud.github.io/playable-ads/
 
 | Demo | Genre | File |
 | --- | --- | --- |
-| **Hex Bloom 3D** | 3D hex-stack puzzle (WebGL) | `hex-bloom/index.html` |
 | **Froggo Hunt** | Hidden object | `froggo-hunt/index.html` |
-| **Jelly Tubes** | Color sort puzzle | `jelly-tubes/index.html` |
 | **Muddy Pup** | Interrupted-play hook (scrub to clean) | `muddy-pup/index.html` |
+| **Hex Bloom 3D** | 3D hex-stack puzzle (WebGL) | `hex-bloom/index.html` |
+| **Jelly Tubes** | Color sort puzzle | `jelly-tubes/index.html` |
 
 ## Hex Bloom 3D
 
