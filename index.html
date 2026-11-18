@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playable Ad Demos — Kunal Behbudzade</title>
+<style>
+  :root { --ink:#2f3e46; --paper:#fbf1dc; --card:#fff; --muted:#5d6b72; --green:#22c04c; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:"Trebuchet MS",system-ui,-apple-system,"Segoe UI",sans-serif; line-height:1.5; }
+  main { max-width:980px; margin:0 auto; padding:40px 16px 56px; }
+  h1 { font-size:clamp(28px,5vw,40px); margin:0 0 6px; }
+  .lead { color:var(--muted); margin:0 0 28px; max-width:62ch; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
+  .card { background:var(--card); border:2px solid var(--ink); border-radius:18px; overflow:hidden; display:flex; flex-direction:column; }
+  .frame { aspect-ratio:9/14; background:#150c3a; border-bottom:2px solid var(--ink); }
+  .frame iframe { width:100%; height:100%; border:0; display:block; }
+  .body { padding:16px 18px 18px; }
+  h2 { margin:0 0 2px; font-size:22px; }
+  .tag { color:var(--muted); font-size:14px; margin:0 0 10px; }
+  ul { margin:0 0 14px; padding-left:18px; font-size:14.5px; }
+  .links { display:flex; flex-wrap:wrap; gap:8px; }
+  a.btn { display:inline-block; padding:8px 14px; border-radius:999px; border:2px solid var(--ink); color:var(--ink); text-decoration:none; font-weight:700; font-size:14px; }
+  a.btn.primary { background:var(--green); color:#fff; border-color:#0e7a2c; }
+  footer { margin-top:28px; color:var(--muted); font-size:14px; }
+  footer a { color:var(--ink); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Playable ad demos</h1>
+  <p class="lead">Two playable ads, each a single HTML file under 40 KB. No libraries, no image or audio assets: all art is drawn in code and all sound is synthesized at runtime. Both play right here.</p>
+
+  <div class="grid">
+    <section class="card">
+      <div class="frame"><iframe src="froggo-hunt/index.html" title="Froggo Hunt playable ad" loading="lazy"></iframe></div>
+      <div class="body">
+        <h2>Froggo Hunt</h2>
+        <p class="tag">Hidden object · 38 KB</p>
+        <ul>
+          <li>Illustrated scene drawn entirely in code</li>
+          <li>Drag to pan, pinch or scroll to zoom</li>
+          <li>Hints that adapt to how the player is doing</li>
+        </ul>
+        <div class="links">
+          <a class="btn primary" href="froggo-hunt/index.html">Play full screen</a>
+          <a class="btn" href="froggo-hunt/index.html?v=b">Variant B</a>
+          <a class="btn" href="froggo-hunt/index.html?debug=1">Debug view</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="frame"><iframe src="jelly-tubes/index.html" title="Jelly Tubes playable ad" loading="lazy"></iframe></div>
+      <div class="body">
+        <h2>Jelly Tubes</h2>
+        <p class="tag">Color sort puzzle · 31 KB</p>
+        <ul>
+          <li>Tutorial hand driven by a BFS solver</li>
+          <li>Tutorial level, real level, end card</li>
+          <li>Squash, bounce and eye-tracking characters</li>
+        </ul>
+        <div class="links">
+          <a class="btn primary" href="jelly-tubes/index.html">Play full screen</a>
+          <a class="btn" href="jelly-tubes/index.html?v=b">Variant B</a>
+          <a class="btn" href="jelly-tubes/index.html?debug=1">Debug view</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    Both demos include CTA hooks for MRAID, Meta, Google, ironSource and Mintegral, A/B variants from one build, and funnel event tracking.
+    Source and notes: <a href="https://github.com/Kunalbehbud/playable-ads">github.com/Kunalbehbud/playable-ads</a> · Built by Kunal Behbudzade.
+  </footer>
+</main>
+</body>
+</html>
