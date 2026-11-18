@@ -148,7 +148,7 @@ var sfx = {
   nope: function () { tone(150, .16, 'square', .1, 95); },
   complete: function () { [523, 659, 784, 1047].forEach(function (f, i) { tone(f * (1 + streak * .06), .22, 'triangle', .25, 0, i * .07); }); },
   win: function () { [523, 659, 784, 1047, 1319, 1568].forEach(function (f, i) { tone(f, .35, 'triangle', .22, 0, i * .09); tone(f / 2, .35, 'sine', .15, 0, i * .09); }); },
-  star: function (i) { tone(880 + i * 220, .25, 'sine', .3, 1320 + i * 330); }
+  star: function (i) { var f = [1047, 1319, 1568][i]; tone(f, .5, 'sine', .22); tone(f * 2, .3, 'sine', .07); tone(f / 2, .25, 'triangle', .08); }
 };
 
 // ───────────────────────── state ─────────────────────────
