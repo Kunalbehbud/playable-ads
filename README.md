@@ -1,13 +1,26 @@
 # Playable ad demos
 
-Two playable ads, each a single HTML file with no libraries and no image or audio assets. All graphics are drawn on canvas and all sound is synthesized with WebAudio at runtime.
+Three playable ads, each a single HTML file under 40 KB with no engine, no libraries and no image or audio assets. All graphics are drawn in code and all sound is synthesized with WebAudio at runtime.
+
+Play them: https://kunalbehbud.github.io/playable-ads/
 
 | Demo | Genre | File |
 | --- | --- | --- |
+| **Hex Bloom 3D** | 3D hex-stack puzzle (WebGL) | `hex-bloom/index.html` |
 | **Froggo Hunt** | Hidden object | `froggo-hunt/index.html` |
 | **Jelly Tubes** | Color sort puzzle | `jelly-tubes/index.html` |
 
-Open either file in a browser to play.
+## Hex Bloom 3D
+
+Drag stacks of hex tiles onto the board. Neighbouring stacks with the same top colour pour into each other, and a run of seven pops.
+
+- **Raw WebGL, no engine:** a small renderer written for this ad. Geometry for every tile is batched into one dynamic vertex buffer per frame, lit per vertex, with bevelled edges and a darkening gradient on the sides that reads as ambient occlusion between stacked tiles.
+- **Own 3D math:** projection and view matrices, world-to-screen projection for UI effects, and ray-plane picking for drag and drop are written out by hand.
+- **Auto-framing camera:** the camera distance is solved at runtime so the board and tray fit between the HUD and the CTA on any aspect ratio.
+- **Shadows:** projected hex shadows that stretch with stack height and soften as a dragged stack lifts.
+- **Merge rules as an animation queue:** transfers and clears are resolved step by step, so chain reactions play out as a sequence of flips with rising pitch.
+- **Game feel:** tiles flip over a horizontal axis as they travel, the dragged stack bends because upper tiles lag behind, haptics on place and clear.
+- **Tutorial hand:** scores every stack and cell combination and demonstrates the move with the biggest merge.
 
 ## Froggo Hunt
 

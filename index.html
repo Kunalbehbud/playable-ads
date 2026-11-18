@@ -29,9 +29,27 @@
 <body>
 <main>
   <h1>Playable ad demos</h1>
-  <p class="lead">Two playable ads, each a single HTML file under 40 KB. No libraries, no image or audio assets: all art is drawn in code and all sound is synthesized at runtime. Both play right here.</p>
+  <p class="lead">Three playable ads, each a single HTML file under 40 KB. No engine, no libraries, no image or audio assets: all art is drawn in code and all sound is synthesized at runtime. All three play right here.</p>
 
   <div class="grid">
+    <section class="card">
+      <div class="frame"><iframe src="hex-bloom/index.html" title="Hex Bloom 3D playable ad" loading="lazy"></iframe></div>
+      <div class="body">
+        <h2>Hex Bloom 3D</h2>
+        <p class="tag">3D hex-stack puzzle · 39 KB</p>
+        <ul>
+          <li>Real-time 3D on raw WebGL, no engine</li>
+          <li>Own renderer, camera math and ray picking</li>
+          <li>Chain-reaction merges with flip animations</li>
+        </ul>
+        <div class="links">
+          <a class="btn primary" href="hex-bloom/index.html">Play full screen</a>
+          <a class="btn" href="hex-bloom/index.html?v=b">Variant B</a>
+          <a class="btn" href="hex-bloom/index.html?debug=1">Debug view</a>
+        </div>
+      </div>
+    </section>
+
     <section class="card">
       <div class="frame"><iframe src="froggo-hunt/index.html" title="Froggo Hunt playable ad" loading="lazy"></iframe></div>
       <div class="body">
@@ -70,7 +88,7 @@
   </div>
 
   <footer>
-    Both demos include CTA hooks for MRAID, Meta, Google, ironSource and Mintegral, A/B variants from one build, and funnel event tracking.
+    All demos include CTA hooks for MRAID, Meta, Google, ironSource and Mintegral, A/B variants from one build, and funnel event tracking.
     Source and notes: <a href="https://github.com/Kunalbehbud/playable-ads">github.com/Kunalbehbud/playable-ads</a> · Built by Kunal Behbudzade.
   </footer>
 </main>
